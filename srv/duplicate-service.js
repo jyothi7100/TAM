@@ -1,9 +1,24 @@
 import cds from '@sap/cds';
-import 'dotenv/config';
 import axios from 'axios';
 
 let cachedToken = null;
 let tokenExpiry = 0;
+
+// Reads credentials from the bound user-provided service in production,
+// falls back to .env locally for development
+function getTamConfig() {
+    const creds = cds.env.requires?.['tam-credentials']?.credentials;
+    if (creds) {
+        return creds;
+    }
+    return {
+        TAM_TOKEN_URL: process.env.TAM_TOKEN_URL,
+        TAM_CLIENT_AUTH: process.env.TAM_CLIENT_AUTH,
+        TAM_SEARCH_URL: process.env.TAM_SEARCH_URL,
+        TAM_USERNAME: process.env.TAM_USERNAME,
+        TAM_PASSWORD: process.env.TAM_PASSWORD
+    };
+}
 
 async function getAccessToken() {
     const now = Date.now();
@@ -11,17 +26,18 @@ async function getAccessToken() {
         return cachedToken;
     }
 
+    const config = getTamConfig();
     const params = new URLSearchParams();
     params.append('grant_type', 'password');
-    params.append('username', process.env.TAM_USERNAME);
-    params.append('password', process.env.TAM_PASSWORD);
+    params.append('username', config.TAM_USERNAME);
+    params.append('password', config.TAM_PASSWORD);
 
     const response = await axios.post(
-        process.env.TAM_TOKEN_URL,
+        config.TAM_TOKEN_URL,
         params.toString(),
         {
             headers: {
-                'Authorization': `Basic ${process.env.TAM_CLIENT_AUTH}`,
+                'Authorization': `Basic ${config.TAM_CLIENT_AUTH}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }
@@ -34,45 +50,12 @@ async function getAccessToken() {
 }
 
 async function searchRecord(token, searchText) {
-    const response = await axios.get(process.env.TAM_SEARCH_URL, {
+    const config = getTamConfig();
+    const response = await axios.get(config.TAM_SEARCH_URL, {
         headers: { 'Authorization': `Bearer ${token}` },
         params: { text: searchText }
     });
     return response.data;
-}
-
-// MPN is not a dedicated field in TAM's response - it appears embedded as free text
-// inside description/longDescription, e.g. "...(Alt P/N 59044P080055 & ...)...".
-// So we match by checking whether the MPN appears as a substring in those fields.
-const MAX_MATCHES = 20;
-
-function findAllMatches(materials, mpn) {
-    if (!materials || materials.length === 0) return [];
-
-    const normalizedMpn = mpn.trim().toLowerCase();
-    const seen = new Set();
-    const matches = [];
-
-    for (const m of materials) {
-        if (seen.has(m.materialCode)) continue;
-
-        const desc = (m.description || '').toLowerCase();
-        const longDesc = (m.longDescription || '').toLowerCase();
-        const shortDescEn = (m.shortDescriptions?.en || '').toLowerCase();
-        const longDescEn = (m.longDescriptions?.en || '').toLowerCase();
-
-        if (
-            desc.includes(normalizedMpn) ||
-            longDesc.includes(normalizedMpn) ||
-            shortDescEn.includes(normalizedMpn) ||
-            longDescEn.includes(normalizedMpn)
-        ) {
-            matches.push(m);
-            seen.add(m.materialCode);
-        }
-    }
-
-    return matches.slice(0, MAX_MATCHES);
 }
 
 export default cds.service.impl(async function () {
@@ -85,10 +68,6 @@ export default cds.service.impl(async function () {
             token = await getAccessToken();
         } catch (err) {
             console.error('TOKEN FETCH FAILED:', err.message);
-            if (err.response) {
-                console.error('Status:', err.response.status);
-                console.error('Data:', JSON.stringify(err.response.data));
-            }
             req.error(500, 'Failed to authenticate with TAM: ' + err.message);
             return;
         }
@@ -100,40 +79,35 @@ export default cds.service.impl(async function () {
                 const searchResult = await searchRecord(token, record.materialNumber);
                 const materials = searchResult.materials || [];
 
-                const matches = findAllMatches(materials, record.materialNumber);
-
-                if (matches.length === 0) {
-    results.push({
-        rowNo: record.rowNo,
-        materialDesc: record.materialDescription,
-        mpn: record.materialNumber,
-        status: 'New',
-        matchedMaterialNo: '',
-        matchedMaterialDesc: '',
-        matchedLongDesc: ''
-    });
-} else {
-    for (const match of matches) {
-        results.push({
-            rowNo: record.rowNo,
-            materialDesc: record.materialDescription,
-            mpn: record.materialNumber,
-            status: 'Duplicate',
-            matchedMaterialNo: match.materialCode || '',
-            matchedMaterialDesc: match.description || '',
-            matchedLongDesc: match.longDescription || ''
-        });
-    }
-}
+                if (materials.length === 0) {
+                    results.push({
+                        rowNo: record.rowNo,
+                        materialDesc: record.materialDescription,
+                        mpn: record.materialNumber,
+                        status: 'New',
+                        matchedMaterialNo: '',
+                        matchedMaterialDesc: '',
+                        matchedLongDesc: ''
+                    });
+                } else {
+                    for (const match of materials) {
+                        results.push({
+                            rowNo: record.rowNo,
+                            materialDesc: record.materialDescription,
+                            mpn: record.materialNumber,
+                            status: 'Duplicate',
+                            matchedMaterialNo: match.materialCode || '',
+                            matchedMaterialDesc: match.description || '',
+                            matchedLongDesc: match.longDescription || ''
+                        });
+                    }
+                }
             } catch (err) {
                 console.error(`Error checking record ${record.rowNo}:`, err.message);
-                if (err.response) {
-                    console.error('Status:', err.response.status);
-                    console.error('Data:', JSON.stringify(err.response.data));
-                }
                 results.push({
                     rowNo: record.rowNo,
                     materialDesc: record.materialDescription,
+                    mpn: record.materialNumber,
                     status: 'Error',
                     matchedMaterialNo: '',
                     matchedMaterialDesc: '',

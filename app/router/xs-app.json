@@ -1,6 +1,5 @@
 {
-  "welcomeFile": "/index.html",
-  "authenticationMethod": "route",
+  
   "routes": [
     {
       "source": "^/odata/(.*)$",
@@ -29,3 +28,4 @@
     }
   ]
 }
+

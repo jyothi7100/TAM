@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@cap-js/sqlite": "^3.0.2",
-    "@sap/cds-dk": "^10",
+    "@sap/cds-dk": "^10.0.4",
     "cds-plugin-ui5": "^0.17.0",
     "mbt": "^1.2.49",
     "rimraf": "^5.0.5"
@@ -25,14 +25,15 @@
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "cds": {
-    
     "fiori": {
       "preview": true
     },
     "server": {
       "index": true
     },
-    
+    "folders": {
+      "app": "app/"
+    },
     "requires": {
       "db": {
         "kind": "sqlite",
@@ -44,8 +45,14 @@
         "kind": "dummy"
       },
       "[production]": {
+        "db": {
+          "kind": "hana"
+        },
         "auth": {
           "kind": "xsuaa"
+        },
+        "tam-credentials": {
+          "kind": "user-provided"
         }
       }
     }

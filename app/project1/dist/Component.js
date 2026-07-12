@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/UIComponent","project1/model/models"],(e,t)=>{"use strict";return e.extend("project1.Component",{metadata:{manifest:"json",interfaces:["sap.ui.core.IAsyncContentCreation"]},init(){this._loadXLSX();e.prototype.init.apply(this,arguments);this.setModel(t.createDeviceModel(),"device");this.getRouter().initialize()},_loadXLSX(){if(window.XLSX){return}const e=document.createElement("script");e.src=sap.ui.require.toUrl("project1/thirdparty/xlsx.full.min.js");document.head.appendChild(e)}})});
+//# sourceMappingURL=Component.js.map
