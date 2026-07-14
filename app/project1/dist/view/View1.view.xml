@@ -15,126 +15,250 @@
                     class="appLogo"/>
             </HBox>
 
-            <VBox id="_IDGenVBox">
+            <IconTabBar id="mainTabBar" select="onTabSelect" expandable="false">
+                <items>
+                    <IconTabFilter id="tabMaterial" key="material" text="Material">
+                        <VBox id="_IDGenMaterialVBox">
 
-                <HBox id="_IDGenActionCard" class="actionCard" justifyContent="SpaceBetween" alignItems="Center">
-                    <HBox id="_IDGenUploadGroup" alignItems="Center">
-                        <Button
-                            id="btnUpload"
-                            text="Upload Excel"
-                            icon="sap-icon://upload"
-                            type="Emphasized"
-                            class="actionButton sapUiTinyMarginEnd"
-                            press="onUploadPress"/>
-                        <HBox id="_IDGenFileNameBox" alignItems="Center" visible="{= ${uploadModel>/fileName} !== ''}">
-                            <Text
-                                id="_IDGenFileNameText"
-                                text="{uploadModel>/fileName}"
-                                class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
-                            <Button
-                                id="btnRemoveFile"
-                                icon="sap-icon://decline"
-                                type="Transparent"
-                                press="onRemoveFile"
-                                tooltip="Remove file"/>
-                        </HBox>
-                        <u:FileUploader
-                            id="excelUploader"
-                            name="excelFile"
-                            change="onFileChange"
-                            fileType="xlsx,xls"
-                            class="hiddenUploader"/>
-                    </HBox>
-                    <Button
-                        id="btnCheckDuplicates"
-                        text="Check for Duplicates"
-                        icon="sap-icon://duplicate"
-                        type="Default"
-                        class="actionButton"
-                        enabled="{= ${uploadModel>/rows}.length > 0}"
-                        press="onCheckDuplicates"/>
-                    <Button
-                        id="btnDownload"
-                        text="Download"
-                        icon="sap-icon://download"
-                        type="Default"
-                        class="actionButton"
-                        enabled="{= ${uploadModel>/rows}.length > 0}"
-                        press="onDownloadPress"/>
-                </HBox>
+                            <HBox id="_IDGenActionCardMat" class="actionCard" justifyContent="SpaceBetween" alignItems="Center">
+                                <HBox id="_IDGenUploadGroupMat" alignItems="Center">
+                                    <Button
+                                        id="btnUploadMaterial"
+                                        text="Upload Excel"
+                                        icon="sap-icon://upload"
+                                        type="Emphasized"
+                                        class="actionButton sapUiTinyMarginEnd"
+                                        press="onUploadPressMaterial"/>
+                                    <HBox id="_IDGenFileNameBoxMat" alignItems="Center" visible="{= ${materialModel>/fileName} !== ''}">
+                                        <Text
+                                            id="_IDGenFileNameTextMat"
+                                            text="{materialModel>/fileName}"
+                                            class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                                        <Button
+                                            id="btnRemoveFileMaterial"
+                                            icon="sap-icon://decline"
+                                            type="Transparent"
+                                            press="onRemoveFileMaterial"
+                                            tooltip="Remove file"/>
+                                    </HBox>
+                                    <u:FileUploader
+                                        id="excelUploaderMaterial"
+                                        name="excelFileMaterial"
+                                        change="onFileChangeMaterial"
+                                        fileType="xlsx,xls"
+                                        class="hiddenUploader"/>
+                                </HBox>
+                                <Button
+                                    id="btnCheckDuplicatesMaterial"
+                                    text="Check for Duplicates"
+                                    icon="sap-icon://duplicate"
+                                    type="Default"
+                                    class="actionButton"
+                                    enabled="{= ${materialModel>/rows}.length > 0}"
+                                    press="onCheckDuplicatesMaterial"/>
+                                <Button
+                                    id="btnDownloadMaterial"
+                                    text="Download"
+                                    icon="sap-icon://download"
+                                    type="Default"
+                                    class="actionButton"
+                                    enabled="{= ${materialModel>/rows}.length > 0}"
+                                    press="onDownloadPressMaterial"/>
+                            </HBox>
 
-                <VBox id="_IDGenTableWrapper" class="sapUiMediumMarginBeginEnd">
+                            <VBox id="_IDGenTableWrapperMat" class="sapUiMediumMarginBeginEnd">
 
-                    <Table
-                        id="previewTable"
-                        items="{uploadModel>/rows}"
-                        visible="{= ${uploadModel>/rows}.length > 0 &amp;&amp; ${resultModel>/results}.length === 0}"
-                        class="sapUiSmallMarginTop">
-                        <headerToolbar>
-                            <Toolbar id="_IDGenToolbar">
-                                <Title id="_IDGenTitle" text="Uploaded Records ({uploadModel>/rows/length})"/>
-                            </Toolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column id="colRowNoPrev" hAlign="Center"><Text id="_IDGenTextRowNoPrev" text="Row No"/></Column>
-                            <Column id="colStatusPrev" hAlign="Center"><Text id="_IDGenTextStatusPrev" text="Status"/></Column>
-                            <Column id="colShortTextPrev"><Text id="_IDGenTextShortTextPrev" text="Short Text"/></Column>
-                            <Column id="colMpnPrev"><Text id="_IDGenTextMpnPrev" text="Manufacturer Part Number"/></Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem id="_IDGenColumnListItem1">
-                                <cells>
-                                    <Text id="_IDGenTextRowNoVal" text="{uploadModel>rowNo}"/>
-                                    <ObjectStatus id="_IDGenObjStatusPrev" text="{uploadModel>status}" state="None"/>
-                                    <Text id="_IDGenTextShortTextVal" text="{uploadModel>shortText}"/>
-                                    <Text id="_IDGenTextMpnVal" text="{uploadModel>mpn}"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
+                                <Table
+                                    id="previewTableMaterial"
+                                    items="{materialModel>/rows}"
+                                    visible="{= ${materialModel>/rows}.length > 0 &amp;&amp; ${materialModel>/results}.length === 0}"
+                                    class="sapUiSmallMarginTop">
+                                    <headerToolbar>
+                                        <Toolbar id="_IDGenToolbarMat">
+                                            <Title id="_IDGenTitleMat" text="Uploaded Records ({materialModel>/rows/length})"/>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column id="colRowNoPrevMat" hAlign="Center"><Text id="_IDGenTextRowNoPrevMat" text="Row No"/></Column>
+                                        <Column id="colStatusPrevMat" hAlign="Center"><Text id="_IDGenTextStatusPrevMat" text="Status"/></Column>
+                                        <Column id="colShortTextPrevMat"><Text id="_IDGenTextShortTextPrevMat" text="Short Text"/></Column>
+                                        <Column id="colMpnPrevMat"><Text id="_IDGenTextMpnPrevMat" text="Manufacturer Part Number"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem id="_IDGenColumnListItemMat">
+                                            <cells>
+                                                <Text id="_IDGenTextRowNoValMat" text="{materialModel>rowNo}"/>
+                                                <ObjectStatus id="_IDGenObjStatusPrevMat" text="{materialModel>status}" state="None"/>
+                                                <Text id="_IDGenTextShortTextValMat" text="{materialModel>shortText}"/>
+                                                <Text id="_IDGenTextMpnValMat" text="{materialModel>searchValue}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
 
-                    <Table
-                        id="resultsTable"
-                        items="{resultModel>/results}"
-                        visible="{= ${resultModel>/results}.length > 0}"
-                        class="sapUiSmallMarginTop">
-                        <headerToolbar>
-                            <Toolbar id="_IDGenToolbar2">
-                                <Title id="_IDGenTitle2" text="Excel Upload vs TAM Table ({resultModel>/results/length})"/>
-                            </Toolbar>
-                        </headerToolbar>
-                        <columns>
-    <Column id="colCheckbox" hAlign="Center" width="4rem"><Text id="_IDGenTextCb" text=""/></Column>
-    <Column id="colRowNo" hAlign="Center"><Text id="_IDGenTextRowNo" text="Row No"/></Column>
-    <Column id="colMatDesc"><Text id="_IDGenTextMatDesc" text="Short Text"/></Column>
-    <Column id="colMpn"><Text id="_IDGenTextMpn" text="MPN"/></Column>
-    <Column id="colStatus" hAlign="Center"><Text id="_IDGenTextStatus" text="Status"/></Column>
-    <Column id="colTamNo"><Text id="_IDGenTextTamNo" text="Material No"/></Column>
-    <Column id="colTamDesc"><Text id="_IDGenTextTamDesc" text="Material Desc"/></Column>
-    <Column id="colTamLongDesc"><Text id="_IDGenTextTamLongDesc" text="Long Description"/></Column>
-</columns>
-<items>
-    <ColumnListItem id="_IDGenResultItem">
-        <cells>
-            <CheckBox id="_IDGenCheckBox" selected="{resultModel>selected}" visible="{resultModel>showCheckbox}"/>
-            <Text id="_IDGenTextRowVal" text="{resultModel>rowNo}"/>
-            <Text id="_IDGenTextDescVal" text="{resultModel>materialDesc}"/>
-            <Text id="_IDGenTextMpnVal1" text="{resultModel>mpn}"/>
-            <ObjectStatus
-                id="_IDGenObjStatus"
-                text="{resultModel>status}"
-                state="{= ${resultModel>status} === 'Duplicate' ? 'Warning' : 'Success'}"/>
-            <Text id="_IDGenTextTamNoVal" text="{resultModel>matchedMaterialNo}"/>
-            <Text id="_IDGenTextTamDescVal" text="{resultModel>matchedMaterialDesc}"/>
-            <Text id="_IDGenTextTamLongDescVal" text="{resultModel>matchedLongDesc}"/>
-        </cells>
-    </ColumnListItem>
-</items>
-                    </Table>
+                                <Table
+                                    id="resultsTableMaterial"
+                                    items="{materialModel>/results}"
+                                    visible="{= ${materialModel>/results}.length > 0}"
+                                    class="sapUiSmallMarginTop">
+                                    <headerToolbar>
+                                        <Toolbar id="_IDGenToolbar2Mat">
+                                            <Title id="_IDGenTitle2Mat" text="Excel Upload vs TAM Table ({materialModel>/results/length})"/>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column id="colCheckboxMat" hAlign="Center" width="4rem"><Text id="_IDGenTextCbMat" text=""/></Column>
+                                        <Column id="colRowNoMat" hAlign="Center"><Text id="_IDGenTextRowNoMat" text="Row No"/></Column>
+                                        <Column id="colMatDescMat"><Text id="_IDGenTextMatDescMat" text="Short Text"/></Column>
+                                        <Column id="colMpnMat"><Text id="_IDGenTextMpnMat" text="MPN"/></Column>
+                                        <Column id="colStatusMat" hAlign="Center"><Text id="_IDGenTextStatusMat" text="Status"/></Column>
+                                        <Column id="colTamNoMat"><Text id="_IDGenTextTamNoMat" text="Material No"/></Column>
+                                        <Column id="colTamDescMat"><Text id="_IDGenTextTamDescMat" text="Material Desc"/></Column>
+                                        <Column id="colTamLongDescMat"><Text id="_IDGenTextTamLongDescMat" text="Long Description"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem id="_IDGenResultItemMat">
+                                            <cells>
+                                                <CheckBox id="_IDGenCheckBoxMat" selected="{materialModel>selected}" visible="{materialModel>showCheckbox}"/>
+                                                <Text id="_IDGenTextRowValMat" text="{materialModel>rowNo}"/>
+                                                <Text id="_IDGenTextDescValMat" text="{materialModel>materialDesc}"/>
+                                                <Text id="_IDGenTextMpnVal2Mat" text="{materialModel>searchValue}"/>
+                                                <ObjectStatus
+                                                    id="_IDGenObjStatusMat"
+                                                    text="{materialModel>status}"
+                                                    state="{= ${materialModel>status} === 'Duplicate' ? 'Warning' : 'Success'}"/>
+                                                <Text id="_IDGenTextTamNoValMat" text="{materialModel>matchedMaterialNo}"/>
+                                                <Text id="_IDGenTextTamDescValMat" text="{materialModel>matchedMaterialDesc}"/>
+                                                <Text id="_IDGenTextTamLongDescValMat" text="{materialModel>matchedLongDesc}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
 
-                </VBox>
+                            </VBox>
+                        </VBox>
+                    </IconTabFilter>
 
-            </VBox>
+                    <IconTabFilter id="tabServices" key="services" text="Services">
+                        <VBox id="_IDGenServiceVBox">
+
+                            <HBox id="_IDGenActionCardSrv" class="actionCard" justifyContent="SpaceBetween" alignItems="Center">
+                                <HBox id="_IDGenUploadGroupSrv" alignItems="Center">
+                                    <Button
+                                        id="btnUploadService"
+                                        text="Upload Excel"
+                                        icon="sap-icon://upload"
+                                        type="Emphasized"
+                                        class="actionButton sapUiTinyMarginEnd"
+                                        press="onUploadPressService"/>
+                                    <HBox id="_IDGenFileNameBoxSrv" alignItems="Center" visible="{= ${serviceModel>/fileName} !== ''}">
+                                        <Text
+                                            id="_IDGenFileNameTextSrv"
+                                            text="{serviceModel>/fileName}"
+                                            class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                                        <Button
+                                            id="btnRemoveFileService"
+                                            icon="sap-icon://decline"
+                                            type="Transparent"
+                                            press="onRemoveFileService"
+                                            tooltip="Remove file"/>
+                                    </HBox>
+                                    <u:FileUploader
+                                        id="excelUploaderService"
+                                        name="excelFileService"
+                                        change="onFileChangeService"
+                                        fileType="xlsx,xls"
+                                        class="hiddenUploader"/>
+                                </HBox>
+                                <Button
+                                    id="btnCheckDuplicatesService"
+                                    text="Check for Duplicates"
+                                    icon="sap-icon://duplicate"
+                                    type="Default"
+                                    class="actionButton"
+                                    enabled="{= ${serviceModel>/rows}.length > 0}"
+                                    press="onCheckDuplicatesService"/>
+                                <Button
+                                    id="btnDownloadService"
+                                    text="Download"
+                                    icon="sap-icon://download"
+                                    type="Default"
+                                    class="actionButton"
+                                    enabled="{= ${serviceModel>/rows}.length > 0}"
+                                    press="onDownloadPressService"/>
+                            </HBox>
+
+                            <VBox id="_IDGenTableWrapperSrv" class="sapUiMediumMarginBeginEnd">
+
+                                <Table
+                                    id="previewTableService"
+                                    items="{serviceModel>/rows}"
+                                    visible="{= ${serviceModel>/rows}.length > 0 &amp;&amp; ${serviceModel>/results}.length === 0}"
+                                    class="sapUiSmallMarginTop">
+                                    <headerToolbar>
+                                        <Toolbar id="_IDGenToolbarSrv">
+                                            <Title id="_IDGenTitleSrv" text="Uploaded Records ({serviceModel>/rows/length})"/>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column id="colRowNoPrevSrv" hAlign="Center"><Text id="_IDGenTextRowNoPrevSrv" text="Row No"/></Column>
+                                        <Column id="colStatusPrevSrv" hAlign="Center"><Text id="_IDGenTextStatusPrevSrv" text="Status"/></Column>
+                                        <Column id="colShortTextPrevSrv"><Text id="_IDGenTextShortTextPrevSrv" text="Short Text"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem id="_IDGenColumnListItemSrv">
+                                            <cells>
+                                                <Text id="_IDGenTextRowNoValSrv" text="{serviceModel>rowNo}"/>
+                                                <ObjectStatus id="_IDGenObjStatusPrevSrv" text="{serviceModel>status}" state="None"/>
+                                                <Text id="_IDGenTextShortTextValSrv" text="{serviceModel>shortText}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+
+                                <Table
+                                    id="resultsTableService"
+                                    items="{serviceModel>/results}"
+                                    visible="{= ${serviceModel>/results}.length > 0}"
+                                    class="sapUiSmallMarginTop">
+                                    <headerToolbar>
+                                        <Toolbar id="_IDGenToolbar2Srv">
+                                            <Title id="_IDGenTitle2Srv" text="Excel Upload vs TAM Table ({serviceModel>/results/length})"/>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column id="colCheckboxSrv" hAlign="Center" width="4rem"><Text id="_IDGenTextCbSrv" text=""/></Column>
+                                        <Column id="colRowNoSrv" hAlign="Center"><Text id="_IDGenTextRowNoSrv" text="Row No"/></Column>
+                                        <Column id="colMatDescSrv"><Text id="_IDGenTextMatDescSrv" text="Short Text"/></Column>
+                                        <Column id="colStatusSrv" hAlign="Center"><Text id="_IDGenTextStatusSrv" text="Status"/></Column>
+                                        <Column id="colTamNoSrv"><Text id="_IDGenTextTamNoSrv" text="Material No"/></Column>
+                                        <Column id="colTamDescSrv"><Text id="_IDGenTextTamDescSrv" text="Material Desc"/></Column>
+                                        <Column id="colTamLongDescSrv"><Text id="_IDGenTextTamLongDescSrv" text="Long Description"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem id="_IDGenResultItemSrv">
+                                            <cells>
+                                                <CheckBox id="_IDGenCheckBoxSrv" selected="{serviceModel>selected}" visible="{serviceModel>showCheckbox}"/>
+                                                <Text id="_IDGenTextRowValSrv" text="{serviceModel>rowNo}"/>
+                                                <Text id="_IDGenTextDescValSrv" text="{serviceModel>materialDesc}"/>
+                                                <ObjectStatus
+                                                    id="_IDGenObjStatusSrv"
+                                                    text="{serviceModel>status}"
+                                                    state="{= ${serviceModel>status} === 'Duplicate' ? 'Warning' : 'Success'}"/>
+                                                <Text id="_IDGenTextTamNoValSrv" text="{serviceModel>matchedMaterialNo}"/>
+                                                <Text id="_IDGenTextTamDescValSrv" text="{serviceModel>matchedMaterialDesc}"/>
+                                                <Text id="_IDGenTextTamLongDescValSrv" text="{serviceModel>matchedLongDesc}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+
+                            </VBox>
+                        </VBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+
         </content>
     </Page>
 </mvc:View>
